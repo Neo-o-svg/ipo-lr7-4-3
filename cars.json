@@ -1,0 +1,38 @@
+[
+    {
+        "id": "1",
+        "name" : "M5 E39", 
+        "manufacturer" : "BMW",
+        "is_petrol" : "Да",
+        "tank_volume" : "70"
+    },
+    {
+        "id" : "2" ,
+        "name" : "F-150", 
+        "manufacturer" : "Ford", 
+        "is_petrol" : "Да", 
+        "tank_volume" : "136"
+    },
+    {
+        "id" : "3" ,
+        "name" : "Model S",
+        "manufacturer" : "Tesla",
+        "is_petrol" : "Нет",
+        "tank_volume" : "Не применяется"
+    },
+    {
+        "id" : "4" , 
+        "name" : "Civik", 
+        "manufacturer" : "Honda",
+        "is_petrol" : "Да",
+        "tank_volume" : "47"
+    },
+    { 
+        "id" : "5" ,
+        "name" : "Golf",
+        "manufacturer" : "Volkswagen",
+        "is_petrol" : "Да",
+        "tank_volume" : "50"
+    }
+]
+  
