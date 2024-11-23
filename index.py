@@ -1,44 +1,56 @@
-# Импортируем библиотеку json для работы с JSON-данными.
-import json
-
+import json 
 
 # Функция вывода меню на экран.
 def showMenu():
-  print()
-    # Вывод меню пользователю с описанием доступных действий.
-  return ("""
+  # Вывод меню пользователю с описанием доступных действий.
+  menu_str = """\n
+        ____________________________________ 
+          
           1) Вывести все записи 
           2) Вывести запись по полю 
           3) Добавить запись 
           4) Удалить запись по полю 
           5) Выйти из программы
-        """)
+        ____________________________________ 
+        """
+  return menu_str
 
 
 # Функция вывода информации об автомобиле.
-def showVehicleInfo(data):
+def showVehicleInfo(data, car_id = 0):
     # Цикл перебора всех автомобилей в списке data.
     for car in data:
-        # Вывод информации об автомобиле в удобном формате.
-        print(f"""
-            Номер записи: {car["id"]},
-            Название модели: {car["name"]},
-            Название производителя: {car["manufacturer"]},
-            Заправляется бензином: {car["is_petrol"]},
-            Объем бака: {car["tank_volume"]}
-           """)
+        if car_id == 0:
+          # Вывод информации об автомобиле в удобном формате.
+          print(f"""
+              Номер записи: {car["id"]},
+              Название модели: {car["name"]},
+              Название производителя: {car["manufacturer"]},
+              Заправляется бензином: {car["is_petrol"]},
+              Объем бака: {car["tank_volume"]}
+            """)
+        else:
+           if car_id == car.get("id"):
+              print(f"""
+              Номер записи: {car["id"]},
+              Название модели: {car["name"]},
+              Название производителя: {car["manufacturer"]},
+              Заправляется бензином: {car["is_petrol"]},
+              Объем бака: {car["tank_volume"]}
+              """)
 
 
 # Функция ввода информации о новом автомобиле.
 def inputAndCheckNewCarInfo():
 
-  #создание функции для вывода ошибки
+  # создание функции для вывода ошибки
   def errorMassage(value):
     print(f"""
       Недопустимое значение {value},
-      Повторите ввод корректно:""")
-    print()
-    
+      Повторите ввод корректно:\n""")
+    return inputAndCheckNewCarInfo()
+
+
   # создание функции для проверки аргумента на строковой тип данных
   def is_string(input_str):
     if isinstance(input_str, str) and (not input_str.isdigit()):
@@ -47,12 +59,13 @@ def inputAndCheckNewCarInfo():
 
     return inputAndCheckNewCarInfo()
 
-  # создание функции для проверки корректного ввода ответа 
+  # создание функции для проверки корректного ввода ответа
   def checkAnswer(answer):
     is_string(answer)
     if (answer.lower() == "да") or (answer.lower() == "нет"):
-      return
-    errorMassage(answer)
+      pass
+    else:
+      errorMassage(answer)
 
   # создание функции для преобразования значения в float тип
   def toFloat(input_num):
@@ -60,8 +73,6 @@ def inputAndCheckNewCarInfo():
       return float(input_num)
     except (ValueError, TypeError):
       errorMassage(input_num)
-
-
 
   # Запрос данных о новом автомобиле у пользователя.
   new_name = input("Введите название модели: ")
@@ -103,16 +114,18 @@ def deleteCar(data, id, flag):
     # Цикл перебора всех автомобилей в списке data.
     for car in data:
         # Если ID совпадает, удаляем автомобиль из списка и устанавливаем флаг find в True.
-        if id == car["id"]:
+        if id == car.get("id", 0):
             data.remove(car)
             flag = True
             break
+    return flag
 
 
 # Функция вывода информации о завершении программы и количестве выполненных операций.
 def output(count, actions_list, actions_count):
     # Вывод информации о завершении программы и количестве выполненных операций.
-    print(f"""     Программа завершена.
+    print(f"""     
+        Программа завершена.
         Кол-во операций: {count}\n
        """)
 
@@ -127,8 +140,6 @@ def output(count, actions_list, actions_count):
     # Возвращает None, чтобы не выводить лишний None в консоль
     return None
 
-
-  
 
 # Открытие файла cars.json в режиме чтения с кодировкой utf-8.
 with open("cars.json", 'r', encoding='utf-8') as file:
@@ -179,9 +190,9 @@ while True:
 
         # Поиск автомобиля по ID.
         for car in data:
-            if id == car["id"]:
+            if id == car.get("id", 0):
                 # Вывод информации об автомобиле.
-                showVehicleInfo(data)
+                showVehicleInfo(data, id)
                 find = True
                 break
 
@@ -199,7 +210,7 @@ while True:
 
         # Проверка на существование ID.
         for car in data:
-            if car["id"] == id:
+            if id == car.get("id", 0):
                 find = True
                 break
 
@@ -228,7 +239,7 @@ while True:
         find = False
 
         # Удаление автомобиля из списка.
-        deleteCar(data, id, find)
+        find = deleteCar(data, id, find)
         # Вывод сообщения, если автомобиль не найден.
         if not find:
             print("Запись не найдена.")
@@ -251,3 +262,4 @@ while True:
     # Обработка некорректного ввода.
     else:
         print("Такого номера нет.")
+
