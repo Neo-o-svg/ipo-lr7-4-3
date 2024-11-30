@@ -51,14 +51,6 @@ def inputAndCheckNewCarInfo():
     return inputAndCheckNewCarInfo()
 
 
-  # создание функции для проверки аргумента на строковой тип данных
-  def is_string(input_str):
-    if isinstance(input_str, str) and (not input_str.isdigit()):
-      return
-    errorMassage(input_str)
-
-    return inputAndCheckNewCarInfo()
-
   # создание функции для проверки корректного ввода ответа
   def checkAnswer(answer):
     is_string(answer)
@@ -76,10 +68,8 @@ def inputAndCheckNewCarInfo():
 
   # Запрос данных о новом автомобиле у пользователя.
   new_name = input("Введите название модели: ")
-  is_string(new_name)
-
   new_manufacturer = input("Введите производителя: ")
-  is_string(new_manufacturer)
+  
 
   new_is_petrol = input("Машина заправляется бензиноом (да/нет): ")
   checkAnswer(new_is_petrol)
@@ -186,8 +176,11 @@ while True:
 
     elif num == 2:
         # Получение ID автомобиля от пользователя.
-        id = int(input("Введите номер записи машины: "))
-
+        id = input("Введите номер записи машины: ")
+        while not id.isdigit():
+          print("Неверное значение. Введите id корректно!")
+          id = input("Введите номер записи машины: ")
+          
         # Поиск автомобиля по ID.
         for car in data:
             if id == car.get("id", 0):
@@ -205,8 +198,12 @@ while True:
             print("Запись не найдена.")
 
     elif num == 3:
+        find = False
         # Получение ID нового автомобиля от пользователя.
-        id = int(input("Введите номер машины: "))
+        id = input("Введите номер машины: ")
+        while not id.isdigit():
+          print("Неверное значение. Введите id корректно!")
+          id = input("Введите номер записи машины: ")
 
         # Проверка на существование ID.
         for car in data:
