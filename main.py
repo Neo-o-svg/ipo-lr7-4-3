@@ -53,7 +53,7 @@ while True:
        Номер записи: {car["id"]},
        Название модели: {car["name"]},
        Название производителя: {car["manufacturer"]},
-       Заправляется бензином: {car["is_petrol"]},
+       Заправляется бензином: {"да" if car["is_petrol"] == True else "нет"},
        Объем бака: {car["tank_volume"]}
       """)
     # Увеличиваем счетчик общих операций и счетчик операций "Вывести все записи"
@@ -64,10 +64,14 @@ while True:
   elif num == 2:
     # Флаг для отслеживания успешности поиска записи
     find = False
+      
     # Получаем ID записи от пользователя
-    id = int(input("Введите номер записи машины: "))
-
-
+    id = input("Введите номер записи машины: ")
+    while not id.isdigit():
+        print("Неверное значение. Введите id корректно!")
+        id = input("Введите номер записи машины: ")
+        
+ 
     # Цикл для поиска записи по ID
     for car in data:
 
@@ -78,7 +82,7 @@ while True:
         Номер записи: {car["id"]},
         Название модели: {car["name"]},
         Название производителя: {car["manufacturer"]},
-        Заправляется бензином: {car["is_petrol"]},
+        Заправляется бензином: {"да" if car["is_petrol"] == True else "нет"},
         Объем бака: {car["tank_volume"]}
         """)
         find = True
@@ -96,8 +100,13 @@ while True:
   elif num == 3:
     # Флаг для отслеживания успешности поиска записи
     find = False
+      
     # Получение ID новой машины от пользователя
-    id = int(input("Введите номер машины: "))
+    id = input("Введите номер записи машины: ")
+    while not id.isdigit():
+        print("Неверное значение. Введите id корректно!")
+        id = input("Введите номер записи машины: ")
+       
 
     # Проверка на существование ID
     for car in data:
@@ -113,8 +122,15 @@ while True:
       new_name = input("Введите название модели: ")
       new_manufacturer = input("Введите производителя: ")
       new_is_petrol = input("Машина заправляется бензиноом (да/нет): ")
+      while new_is_petrol not in ["да", "нет"]:
+        print("Неверное значение. Введите ответ корректно!")
+        new_is_petrol = input("Машина заправляется бензиноом (да/нет): ") 
+           
       new_tank_volume = float(input("Введите объём бака: "))
-
+        while new_tank_volume not isinstance(new_tank_volume, float):
+          print("Неверное значение. Введите ответ корректно!")
+          new_tank_volume = float(input("Введите объём бака: "))
+      
       new_car = {
         "id": id,
         "name": new_name,
