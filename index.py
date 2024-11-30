@@ -1,82 +1,109 @@
-import json 
+import json
 
 # Функция вывода меню на экран.
+
+
 def showMenu():
-  # Вывод меню пользователю с описанием доступных действий.
-  menu_str = """\n
-        ____________________________________ 
-          
-          1) Вывести все записи 
-          2) Вывести запись по полю 
-          3) Добавить запись 
-          4) Удалить запись по полю 
+    # Вывод меню пользователю с описанием доступных действий.
+    menu_str = """\n
+        ____________________________________
+
+          1) Вывести все записи
+          2) Вывести запись по полю
+          3) Добавить запись
+          4) Удалить запись по полю
           5) Выйти из программы
-        ____________________________________ 
+        ____________________________________
         """
-  return menu_str
+    return menu_str
 
 
 # Функция вывода информации об автомобиле.
-def showVehicleInfo(data, car_id = 0):
+def showVehicleInfo(data, car_id=0):
     # Цикл перебора всех автомобилей в списке data.
     for car in data:
         if car_id == 0:
-          # Вывод информации об автомобиле в удобном формате.
-          print(f"""
-              Номер записи: {car["id"]},
-              Название модели: {car["name"]},
-              Название производителя: {car["manufacturer"]},
-              Заправляется бензином: {car["is_petrol"]},
-              Объем бака: {car["tank_volume"]}
-            """)
-        else:
-           if car_id == car.get("id"):
-              print(f"""
-              Номер записи: {car["id"]},
-              Название модели: {car["name"]},
-              Название производителя: {car["manufacturer"]},
-              Заправляется бензином: {car["is_petrol"]},
-              Объем бака: {car["tank_volume"]}
+            # Вывод информации об автомобиле в удобном формате.
+            print(f"""
+                Номер записи: {car["id"]},
+                Название модели: {car["name"]},
+                Название производителя: {car["manufacturer"]},
+                Заправляется бензином: {car["is_petrol"]},
+                Объем бака: {car["tank_volume"]}
               """)
+        else:
+            if car_id == car.get("id"):
+                print(f"""
+                Номер записи: {car["id"]},
+                Название модели: {car["name"]},
+                Название производителя: {car["manufacturer"]},
+                Заправляется бензином: {car["is_petrol"]},
+                Объем бака: {car["tank_volume"]}
+                """)
 
 
 # Функция ввода информации о новом автомобиле.
-def inputAndCheckNewCarInfo():
+def inputAndCheckNewCarInfo(current_step = 1):
 
-  # создание функции для вывода ошибки
-  def errorMassage(value):
-    print(f"""
-      Недопустимое значение {value},
-      Повторите ввод корректно:\n""")
-    return inputAndCheckNewCarInfo()
+    # создание функции для вывода ошибки
+    def errorMassage(value, error_step):
+        print(f"""
+          Недопустимое значение {value},
+          Повторите ввод корректно:\n""")
+        return inputAndCheckNewCarInfo(error_step)
+
+    def is_string(input_str, current_step):
+        if isinstance(input_str, str) and (not input_str.isdigit()):
+            return
+        errorMassage(input_str, current_step)
+        return inputAndCheckNewCarInfo(current_step)
+
+    # создание функции для проверки корректного ввода ответа
+    def checkAnswer(answer, current_step):
+        is_string(answer, current_step)
+        if (answer.lower() == "да") or (answer.lower() == "нет"):
+            pass
+        else:
+            errorMassage(answer, current_step)
+
+    # создание функции для преобразования значения в float тип
+    def toFloat(input_num, current_step):
+        try:
+            return float(input_num)
+        except (ValueError, TypeError):
+            errorMassage(input_num, current_step)
+
+    new_data = []
+    # Запрос данных о новом автомобиле у пользователя.
+    if current_step == 1:
+        new_name = input("Введите название модели: ")
+        new_manufacturer = input("Введите производителя: ")
+        new_is_petrol = input("Машина заправляется бензином (да/нет): ").strip()
+        checkAnswer(new_is_petrol, 3)
+        new_tank_volume = toFloat(input("Введите объём бака: "), 4)
+
+        new_data.extend(
+            [
+                new_name, 
+                new_manufacturer,
+                new_is_petrol,
+                new_tank_volume
+            ] 
+            )
+        
+    elif current_step == 3:
+        new_is_petrol = input("Машина заправляется бензином (да/нет): ").strip()
+        checkAnswer(new_is_petrol, 3)
+        new_tank_volume = toFloat(input("Введите объём бака: "), 4)
+        new_data.extend([new_is_petrol, new_tank_volume])
 
 
-  # создание функции для проверки корректного ввода ответа
-  def checkAnswer(answer):
-    is_string(answer)
-    if (answer.lower() == "да") or (answer.lower() == "нет"):
-      pass
-    else:
-      errorMassage(answer)
+    elif current_step == 4:
+        new_tank_volume = toFloat(input("Введите объём бака: "), 4)
+        new_data.append(new_tank_volume)
 
-  # создание функции для преобразования значения в float тип
-  def toFloat(input_num):
-    try:
-      return float(input_num)
-    except (ValueError, TypeError):
-      errorMassage(input_num)
-
-  # Запрос данных о новом автомобиле у пользователя.
-  new_name = input("Введите название модели: ")
-  new_manufacturer = input("Введите производителя: ")
-  
-
-  new_is_petrol = input("Машина заправляется бензиноом (да/нет): ")
-  checkAnswer(new_is_petrol)
-
-  new_tank_volume = toFloat(input("Введите объём бака: "))
-  # Возвращает список с данными о новом автомобиле.
-  return [new_name, new_manufacturer, new_is_petrol, new_tank_volume]
+    # Возвращает список с данными о новом автомобиле.
+    return new_data
 
 
 # Функция создания словаря с информацией о новом автомобиле.
@@ -114,7 +141,7 @@ def deleteCar(data, id, flag):
 # Функция вывода информации о завершении программы и количестве выполненных операций.
 def output(count, actions_list, actions_count):
     # Вывод информации о завершении программы и количестве выполненных операций.
-    print(f"""     
+    print(f"""
         Программа завершена.
         Кол-во операций: {count}\n
        """)
@@ -130,6 +157,11 @@ def output(count, actions_list, actions_count):
     # Возвращает None, чтобы не выводить лишний None в консоль
     return None
 
+def checkId(id):
+    while not id.isdigit():
+        print("Неверное значение. Введите id корректно!")
+        id = input("Введите номер записи машины: ")
+    return id
 
 # Открытие файла cars.json в режиме чтения с кодировкой utf-8.
 with open("cars.json", 'r', encoding='utf-8') as file:
@@ -177,10 +209,8 @@ while True:
     elif num == 2:
         # Получение ID автомобиля от пользователя.
         id = input("Введите номер записи машины: ")
-        while not id.isdigit():
-          print("Неверное значение. Введите id корректно!")
-          id = input("Введите номер записи машины: ")
-          
+        id = checkId(id)
+
         # Поиск автомобиля по ID.
         for car in data:
             if id == car.get("id", 0):
@@ -200,10 +230,8 @@ while True:
     elif num == 3:
         find = False
         # Получение ID нового автомобиля от пользователя.
-        id = input("Введите номер машины: ")
-        while not id.isdigit():
-          print("Неверное значение. Введите id корректно!")
-          id = input("Введите номер записи машины: ")
+        id = input("Введите номер записи машины: ")
+        id = checkId(id)
 
         # Проверка на существование ID.
         for car in data:
@@ -232,7 +260,9 @@ while True:
 
     elif num == 4:
         # Получение ID автомобиля для удаления.
-        id = int(input("Введите номер записи: "))
+        id = input("Введите номер записи машины: ")
+        id = checkId(id)
+
         find = False
 
         # Удаление автомобиля из списка.
@@ -259,4 +289,3 @@ while True:
     # Обработка некорректного ввода.
     else:
         print("Такого номера нет.")
-
