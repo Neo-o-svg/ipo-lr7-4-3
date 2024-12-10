@@ -170,7 +170,7 @@ with open("cars.json", 'r', encoding='utf-8') as file:
 
 # Инициализация счетчика выполненных операций.
 count = 0
-
+last_id = 5
 # Список доступных действий.
 actions_list = [
     "Вывести все записи",
@@ -228,34 +228,21 @@ while True:
             print("Запись не найдена.")
 
     elif num == 3:
-        find = False
-        # Получение ID нового автомобиля от пользователя.
-        id = input("Введите номер записи машины: ")
-        id = checkId(id)
-
-        # Проверка на существование ID.
-        for car in data:
-            if id == car.get("id", 0):
-                find = True
-                break
-
-        # Вывод сообщения об ошибке, если ID уже существует.
-        if find:
-            print("Такой номер уже существует.")
-        # Ввод информации о новом автомобиле и добавление его в список.
-        else:
-            new_name, new_manufacturer, new_is_petrol, new_tank_volume = inputAndCheckNewCarInfo()
-            # Создание нового автомобиля и добавление его в список.
-            new_car = createNewCar(
-                id, new_name, new_manufacturer, new_is_petrol, new_tank_volume)
-            addNewCar(data, new_car)
-            # Сохранение изменений в файл.
-            with open("cars.json", 'w', encoding='utf-8') as out_file:
-                json.dump(data, out_file)
-            print("Машина успешно добавлена.")
+        new_name, new_manufacturer, new_is_petrol, new_tank_volume = inputAndCheckNewCarInfo()
+        # Создание нового автомобиля и добавление его в список.
+        new_car = createNewCar(
+            last_id, new_name, new_manufacturer, new_is_petrol, new_tank_volume)
+        addNewCar(data, new_car)
+        # Сохранение изменений в файл.
+        with open("cars.json", 'w', encoding='utf-8') as out_file:
+            json.dump(data, out_file)
+        print("Машина успешно добавлена.")
+        
+            
 
         # Увеличение счетчиков.
         count += 1
+        last_id += 1
         actions_count[3] += 1
 
     elif num == 4:
